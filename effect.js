@@ -83,4 +83,37 @@ function update() {
 }
 
 // Start the animation
+let gravity = false;
+const gravityToggle = document.getElementById('gravityToggle');
+gravityToggle.addEventListener('click', () => {
+  gravity = !gravity;
+});
+
+function update() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBalls();
+
+  balls.forEach(ball => {
+    // Bounce off the walls
+    if(ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
+      ball.dx *= -1;
+    }
+    if(ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
+      ball.dy *= -1;
+    }
+
+    // Apply gravity if enabled
+    if (gravity) {
+      ball.dy += 0.5; // gravity acceleration value
+    }
+
+    // Move the ball
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+  });
+
+  requestAnimationFrame(update);
+}
+
+// Start the animation
 update();
