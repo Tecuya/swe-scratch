@@ -48,18 +48,23 @@ let intervalId;
 canvas.addEventListener('mousedown', function(event) {
   mouseDown = true;
   const rect = canvas.getBoundingClientRect();
-  const create = () => {
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    balls.push(createBall(x, y));
+  const create = (x, y) => {
+    balls.push(createBall(xg, y));
   };
-  create();
-  intervalId = setInterval(create, 50); // Create balls every 50ms
+  const onMouseMove = (e) => {
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    create(x, y);
+  };
+  canvas.addEventListener('mousemove', onMouseMove);
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  create(x, y);
 });
 
-canvas.addEventListener('mouseup', function() {
+canvas.addEventListener('mouseup', function(event) {
   mouseDown = false;
-  clearInterval(intervalId);
+  canvas.removeEventListener('mousemove', onMouseMove);
 });
 
 // Modify drawBall to draw all balls
