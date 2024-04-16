@@ -49,7 +49,7 @@ canvas.addEventListener('mousedown', function(event) {
   mouseDown = true;
   const rect = canvas.getBoundingClientRect();
   const create = (x, y) => {
-    balls.push(createBall(xg, y));
+    balls.push(createBall(x, y));
   };
   const onMouseMove = (e) => {
     const x = e.clientX - rect.left;
