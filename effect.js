@@ -47,4 +47,60 @@ function update() {
 }
 
 // Start the animation
+// Initialize an array to hold multiple balls
+const balls = [ball];  // Start with the initial ball
+
+// Function to create a new ball at click position
+function createBall(x, y) {
+  return {
+    x,
+    y,
+    size: 30,
+    dx: (Math.random() - 0.5) * 10,
+    dy: (Math.random() - 0.5) * 10
+  };
+}
+
+// Add event listener to canvas for click events
+canvas.addEventListener('click', function(event) {
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  balls.push(createBall(x, y));
+});
+
+// Modify drawBall to draw all balls
+function drawBalls() {
+  balls.forEach(ball => {
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
+    ctx.fillStyle = '#0095DD';
+    ctx.fill();
+    ctx.closePath();
+  });
+}
+
+// Update the update function to handle multiple balls
+function update() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBalls();
+
+  balls.forEach(ball => {
+    // Bounce off the walls
+    if(ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
+      ball.dx *= -1;
+    }
+    if(ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
+      ball.dy *= -1;
+    }
+
+    // Move the ball
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+  });
+
+  requestAnimationFrame(update);
+}
+
+// Start the animation
 update();
