@@ -67,8 +67,26 @@ gravityToggle.addEventListener('click', () => {
   gravity = !gravity;
 });
 
+function checkCollisions() {
+  for (let i = 0; i < balls.length; i++) {
+    for (let j = i + 1; j < balls.length; j++) {
+      const dx = balls[j].x - balls[i].x;
+      const dy = balls[j].y - balls[i].y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < balls[i].size + balls[j].size) {
+        // Simple collision response
+        balls[i].dx *= -1;
+        balls[i].dy *= -1;
+        balls[j].dx *= -1;
+        balls[j].dy *= -1;
+      }
+    }
+  }
+}
+
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  checkCollisions(); // Check for collisions between balls
   drawBalls();
 
   balls.forEach(ball => {
@@ -94,26 +112,5 @@ function update() {
 }
 
 // Start the animation
-function checkCollisions() {
-  for (let i = 0; i < balls.length; i++) {
-    for (let j = i + 1; j < balls.length; j++) {
-      const dx = balls[j].x - balls[i].x;
-      const dy = balls[j].y - balls[i].y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      if (distance < balls[i].size + balls[j].size) {
-        // Simple collision response
-        balls[i].dx *= -1;
-        balls[i].dy *= -1;
-        balls[j].dx *= -1;
-        balls[j].dy *= -1;
-      }
-    }
-  }
-}
+update();
 
-// Call checkCollisions in the update function
-function update() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  checkCollisions(); // Check for collisions between balls
-  drawBalls();
-  // ... rest of the update function ...
