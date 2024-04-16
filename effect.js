@@ -125,9 +125,13 @@ function update() {
     if(ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
       ball.dx *= -1 * damping;
     }
-    if(ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
-      ball.dy *= -1 * damping;
-    }
+        if(ball.y + ball.size > canvas.height) {
+            ball.dy *= -1 * damping;
+            ball.y = canvas.height - ball.size; // Keep the ball within the canvas bounds
+        }
+        if(ball.y - ball.size < 0) {
+            ball.dy *= -1 * damping;
+        }
 
     // Apply gravity if enabled
     if (gravity) {
