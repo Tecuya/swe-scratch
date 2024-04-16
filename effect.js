@@ -57,15 +57,15 @@ canvas.addEventListener('mousedown', function(event) {
     create(x, y);
   };
   canvas.addEventListener('mousemove', onMouseMove);
+  canvas.addEventListener('mouseup', function(event) {
+    mouseDown = false;
+    canvas.removeEventListener('mousemove', onMouseMove);
+  });
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   create(x, y);
 });
 
-canvas.addEventListener('mouseup', function(event) {
-  mouseDown = false;
-  canvas.removeEventListener('mousemove', onMouseMove);
-});
 
 // Modify drawBall to draw all balls
 function drawBalls() {
@@ -120,7 +120,7 @@ function update() {
   balls.forEach(ball => {
     // Bounce off the walls
     // Damping factor for energy loss on wall collision
-    const damping = 0.9;
+    const damping = 0.97;
     // Bounce off the walls with energy loss
     if(ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
       ball.dx *= -1 * damping;
