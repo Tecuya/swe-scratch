@@ -74,11 +74,21 @@ function checkCollisions() {
       const dy = balls[j].y - balls[i].y;
       const distance = Math.sqrt(dx * dx + dy * dy);
       if (distance < balls[i].size + balls[j].size) {
-        // Simple collision response
-        balls[i].dx *= -1;
-        balls[i].dy *= -1;
-        balls[j].dx *= -1;
-        balls[j].dy *= -1;
+        // Calculate normal and tangent vectors
+        const normal = { x: dx / distance, y: dy / distance };
+        const tangent = { x: -normal.y, y: normal.x };
+
+        // Resolve velocities into normal and tangent components
+        const v1n = normal.x * balls[i].dx + normal.y * balls[i].dy;
+        const v1t = tangent.x * balls[i].dx + tangent.y * balls[i].dy;
+        const v2n = normal.x * balls[j].dx + normal.y * balls[j].dy;
+        const v2t = tangent.x * balls[j].dx + tangent.y * balls[j].dy;
+
+        // Exchange normal velocity components (tangent components remain unchanged)
+        balls[i].dx = tangent.x * v1t + normal.x * v2n;
+        balls[i].dy = tangent.y * v1t + normal.y * v2n;
+        balls[j].dx = tangent.x * v2t + normal.x * v1n;
+        balls[j].dy = tangent.y * v2t + normal.y * v1n;
       }
     }
   }
@@ -91,11 +101,14 @@ function update() {
 
   balls.forEach(ball => {
     // Bounce off the walls
+    // Damping factor for energy loss on wall collision
+    const damping = 0.9;
+    // Bounce off the walls with energy loss
     if(ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
-      ball.dx *= -1;
+      ball.dx *= -1 * damping;
     }
     if(ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
-      ball.dy *= -1;
+      ball.dy *= -1 * damping;
     }
 
     // Apply gravity if enabled
