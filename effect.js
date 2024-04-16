@@ -60,28 +60,6 @@ function drawBalls() {
   });
 }
 
-// Update the update function to handle multiple balls
-function update() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBalls();
-
-  balls.forEach(ball => {
-    // Bounce off the walls
-    if(ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
-      ball.dx *= -1;
-    }
-    if(ball.y + ball.size > canvas.height || ball.y - ball.size < 0) {
-      ball.dy *= -1;
-    }
-
-    // Move the ball
-    ball.x += ball.dx;
-    ball.y += ball.dy;
-  });
-
-  requestAnimationFrame(update);
-}
-
 // Start the animation
 let gravity = false;
 const gravityToggle = document.getElementById('gravityToggle');
