@@ -41,12 +41,25 @@ function createBall(x, y) {
   };
 }
 
-// Add event listener to canvas for click events
-canvas.addEventListener('click', function(event) {
+// Add event listeners to canvas for mouse down and up events
+let mouseDown = false;
+let intervalId;
+
+canvas.addEventListener('mousedown', function(event) {
+  mouseDown = true;
   const rect = canvas.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  balls.push(createBall(x, y));
+  const create = () => {
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    balls.push(createBall(x, y));
+  };
+  create();
+  intervalId = setInterval(create, 50); // Create balls every 50ms
+});
+
+canvas.addEventListener('mouseup', function() {
+  mouseDown = false;
+  clearInterval(intervalId);
 });
 
 // Modify drawBall to draw all balls
