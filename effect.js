@@ -31,14 +31,15 @@ function drawBall() {
 const balls = [ball];  // Start with the initial ball
 
 // Function to create a new ball at click position
-function createBall(x, y) {
+function createBall(x, y, size) {
   return {
     x,
     y,
-    size: 30,
+    size,
     dx: (Math.random() - 0.5) * 10,
     dy: (Math.random() - 0.5) * 10
   };
+}
 }
 
 // Add event listeners to canvas for mouse down and up events
@@ -48,8 +49,10 @@ let intervalId;
 canvas.addEventListener('mousedown', function(event) {
   mouseDown = true;
   const rect = canvas.getBoundingClientRect();
+  const ballSizeSlider = document.getElementById('ballSizeSlider');
   const create = (x, y) => {
-    balls.push(createBall(x, y));
+    const size = parseInt(ballSizeSlider.value);
+    balls.push(createBall(x, y, size));
   };
   const onMouseMove = (e) => {
     const x = e.clientX - rect.left;
@@ -64,6 +67,7 @@ canvas.addEventListener('mousedown', function(event) {
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
   create(x, y);
+});
 });
 
 
