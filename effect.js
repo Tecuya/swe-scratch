@@ -79,10 +79,17 @@ function drawBalls() {
 }
 
 // Start the animation
-let gravity = false;
-const gravityToggle = document.getElementById('gravityToggle');
-gravityToggle.addEventListener('click', () => {
-  gravity = !gravity;
+// let gravity = false;
+// const gravityToggle = document.getElementById('gravityToggle');
+// gravityToggle.addEventListener('click', () => {
+//   gravity = !gravity;
+// });
+
+// New gravity slider logic
+let gravity = 0.5; // Default gravity value
+const gravitySlider = document.getElementById('gravitySlider');
+gravitySlider.addEventListener('input', () => {
+  gravity = parseFloat(gravitySlider.value);
 });
 
 function checkCollisions() {
@@ -133,10 +140,8 @@ function update() {
             ball.dy *= -1 * damping;
         }
 
-    // Apply gravity if enabled
-    if (gravity) {
-      ball.dy += 0.5; // gravity acceleration value
-    }
+    // Apply gravity from the slider
+    ball.dy += gravity; // Use the gravity value from the slider
 
     // Move the ball
     ball.x += ball.dx;
