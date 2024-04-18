@@ -153,4 +153,25 @@ function update() {
 
 // Start the animation
 update();
+document.addEventListener('DOMContentLoaded', (event) => {
+  const explodeButton = document.getElementById('explodeButton');
+  explodeButton.addEventListener('click', explodeRandomBall);
+});
 
+function explodeRandomBall() {
+  if (balls.length === 0) return; // No balls to explode
+  const index = Math.floor(Math.random() * balls.length);
+  const explodedBall = balls[index];
+  balls.splice(index, 1); // Remove the exploded ball
+
+  // Calculate the explosion effect on nearby balls
+  balls.forEach(ball => {
+    const dx = ball.x - explodedBall.x;
+    const dy = ball.y - explodedBall.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < explodedBall.size * 3) { // Arbitrary range of effect
+      ball.dx += dx / distance * 5; // Arbitrary force of explosion
+      ball.dy += dy / distance * 5;
+    }
+  });
+}
