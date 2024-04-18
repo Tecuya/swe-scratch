@@ -12,7 +12,7 @@ canvas.height = window.innerHeight;
 const ball = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  size: 30,
+  size: 15,
   dx: 5,
   dy: 4
 };
@@ -170,8 +170,8 @@ function explodeRandomBall() {
     const dy = ball.y - explodedBall.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     if (distance < explodedBall.size * 3) { // Arbitrary range of effect
-      ball.dx += dx / distance * 5; // Arbitrary force of explosion
-      ball.dy += dy / distance * 5;
+      ball.dx += dx / distance * 10; // Arbitrary force of explosion
+      ball.dy += dy / distance * 10;
     }
   });
 }
