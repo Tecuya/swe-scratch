@@ -1,4 +1,4 @@
-// Simple bouncing ball effect
+ // Simple bouncing ball effect
 
 // Get the canvas and context
 const canvas = document.getElementById('effectCanvas');
@@ -36,10 +36,11 @@ function createBall(x, y, size) {
     x,
     y,
     size,
-    dx: (Math.random() - 0.5) * 10,
-    dy: (Math.random() - 0.5) * 10
+    dx: 0,
+    dy: 0,
+    // dx: (Math.random() - 0.5) * 10,
+    // dy: (Math.random() - 0.5) * 10
   };
-}
 }
 
 // Add event listeners to canvas for mouse down and up events
@@ -68,7 +69,6 @@ canvas.addEventListener('mousedown', function(event) {
   const y = event.clientY - rect.top;
   create(x, y);
 });
-});
 
 
 // Modify drawBall to draw all balls
@@ -81,13 +81,6 @@ function drawBalls() {
     ctx.closePath();
   });
 }
-
-// Start the animation
-// let gravity = false;
-// const gravityToggle = document.getElementById('gravityToggle');
-// gravityToggle.addEventListener('click', () => {
-//   gravity = !gravity;
-// });
 
 // New gravity slider logic
 let gravity = 0.5; // Default gravity value
