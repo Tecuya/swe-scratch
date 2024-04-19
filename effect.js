@@ -90,9 +90,14 @@ gravitySlider.addEventListener('input', () => {
 
 // Function to calculate kinetic energy of a ball
 function calculateKineticEnergy(ball) {
+  // Ensure that ball.dx and ball.dy are valid numbers
+  if (typeof ball.dx !== 'number' || isNaN(ball.dx) || typeof ball.dy !== 'number' || isNaN(ball.dy)) {
+    return 0; // Return 0 kinetic energy if invalid values are detected
+  }
   const velocity = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
   const kineticEnergy = 0.5 * ball.size * velocity * velocity;
   return kineticEnergy;
+}
 }
 
 // Function to update the temperature display
