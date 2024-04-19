@@ -131,10 +131,10 @@ function checkCollisions() {
         const newV2n = (v2n * (m2 - m1) + 2 * m1 * v1n) / (m1 + m2);
 
         // Convert the scalar normal and tangent velocities into vectors
-        balls[i].dx = tangent.x * v1t + normal.x * newV1n;
-        balls[i].dy = tangent.y * v1t + normal.y * newV1n;
-        balls[j].dx = tangent.x * v2t + normal.x * newV2n;
-        balls[j].dy = tangent.y * v2t + normal.y * newV2n;
+        balls[i].dx = (tangent.x * v1t + normal.x * newV1n) * damping;
+        balls[i].dy = (tangent.y * v1t + normal.y * newV1n) * damping;
+        balls[j].dx = (tangent.x * v2t + normal.x * newV2n) * damping;
+        balls[j].dy = (tangent.y * v2t + normal.y * newV2n) * damping;
       }
     }
   }
@@ -143,15 +143,8 @@ function checkCollisions() {
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  updateTemperatureDisplay();
-  
-  checkCollisions(); // Check for collisions between balls
-  drawBalls();
-
-  balls.forEach(ball => {
-    // Bounce off the walls
-    // Damping factor for energy loss on wall collision
-    const damping = 0.97;
+// Damping factor for energy loss on collision
+let damping = 0.97;
     // Bounce off the walls with energy loss
     if(ball.x + ball.size > canvas.width) {
       ball.dx *= -1 * damping;
@@ -204,4 +197,25 @@ function explodeRandomBall() {
       ball.dy += dy / distance * 20;
     }
   });
-}
+// Create damping slider element
+const dampingSliderLabel = document.createElement('label');
+dampingSliderLabel.htmlFor = 'dampingSlider';
+dampingSliderLabel.innerText = 'Damping: ';
+
+const dampingSlider = document.createElement('input');
+dampingSlider.type = 'range';
+dampingSlider.id = 'dampingSlider';
+dampingSlider.min = '0.5';
+dampingSlider.max = '1';
+dampingSlider.step = '0.01';
+dampingSlider.value = damping.toString();
+
+// Update the damping variable when the slider value changes
+dampingSlider.addEventListener('input', () => {
+  damping = parseFloat(dampingSlider.value);
+});
+
+// Append the slider to the controls
+const controls = document.getElementById('controls');
+controls.appendChild(dampingSliderLabel);
+controls.appendChild(dampingSlider);
