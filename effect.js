@@ -22,6 +22,12 @@ gravitySlider.addEventListener('input', () => {
   gravity = parseFloat(gravitySlider.value);
 });
 
+const gravityZero = document.getElementById('gravityZero');
+gravityZero.addEventListener('click', () => {
+  gravitySlider.value = 0;
+  gravity = 0;
+});
+
 // Ball properties
 const ball = {
   x: canvas.width / 2,
@@ -31,18 +37,8 @@ const ball = {
   dy: 4
 };
 
-// Start the animation
 // Initialize an array to hold multiple balls
-const balls = [ball];  // Start with the initial ball
-
-// Draw ball on canvas
-function drawBall() {
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
-  ctx.fillStyle = '#0095DD';
-  ctx.fill();
-  ctx.closePath();
-}
+const balls = [];
 
 // Function to create a new ball at click position
 function createBall(x, y, size) {
@@ -55,36 +51,24 @@ function createBall(x, y, size) {
   };
 }
 
-// Add event listeners to canvas for mouse down and up events
-let intervalId;
+const tool = {
+  applied: false,
+  x: undefined,
+  y: undefined
+};
+
+canvas.addEventListener('mouseup', function(event) {
+  tool.applied = false;
+});
 
 canvas.addEventListener('mousedown', function(event) {
-  const toolSelect = document.getElementById('toolSelect').value;
+  tool.applied = true;
+});
+
+canvas.addEventListener('mousemove', (e) => {
   const rect = canvas.getBoundingClientRect();
-  const ballSizeSlider = document.getElementById('ballSizeSlider');
-  const click = (x, y) => {
-    if (toolSelect === 'addBall') {
-      const size = parseInt(ballSizeSlider.value);
-      balls.push(createBall(x, y, size));
-      document.getElementById('circleCounter').innerText = balls.length;
-    } else if (toolSelect === 'explodeBall') {
-      explodeBalls(x, y);
-    } else if (toolSelect === 'implodeBall') {
-      implodeBalls(x, y);
-    }
-  };
-  const onMouseMove = (e) => {
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    click(x, y);
-  };
-  canvas.addEventListener('mousemove', onMouseMove);
-  canvas.addEventListener('mouseup', function(event) {
-    canvas.removeEventListener('mousemove', onMouseMove);
-  });
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  click(x, y);
+  tool.x = e.clientX - rect.left;
+  tool.y = e.clientY - rect.top;
 });
 
 // Modify drawBall to draw all balls
@@ -153,8 +137,8 @@ function checkCollisions() {
 
 // Function to explode balls around a point
 function explodeBalls(centerX, centerY) {
-  const explosionRadius = 100; // radius within which balls will be affected
-  const explosionForce = 10; // force of the explosion
+  const explosionRadius = 300; // radius within which balls will be affected
+  const explosionForce = 5; // force of the explosion
 
   balls.forEach(ball => {
     const dx = ball.x - centerX;
@@ -170,8 +154,8 @@ function explodeBalls(centerX, centerY) {
 }
 
 function implodeBalls(centerX, centerY) {
-  const implosionRadius = 100; // radius within which balls will be affected
-  const implosionForce = -10; // force of the implosion, negative to pull inward
+  const implosionRadius = 300; // radius within which balls will be affected
+  const implosionForce = -5; // force of the implosion, negative to pull inward
 
   balls.forEach(ball => {
     const dx = ball.x - centerX;
@@ -186,12 +170,32 @@ function implodeBalls(centerX, centerY) {
   });
 }
 
+function applyToolEffect() {
+  if(!tool.applied) {
+    return;
+  }
+  const toolSelect = document.getElementById('toolSelect').value;
+  if (toolSelect === 'addBall') {
+    const ballSizeSlider = document.getElementById('ballSizeSlider');
+    const size = parseInt(ballSizeSlider.value);
+    balls.push(createBall(tool.x, tool.y, size));
+    document.getElementById('circleCounter').innerText = balls.length;
+  }else if (toolSelect === 'explodeBall') {
+    explodeBalls(tool.x, tool.y);
+  } else if (toolSelect === 'implodeBall') {
+    implodeBalls(tool.x, tool.y);
+  }
+}
+
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   updateTemperatureDisplay();
 
   checkCollisions(); // Check for collisions between balls
+
+  applyToolEffect();
+
   drawBalls();
 
   balls.forEach(ball => {

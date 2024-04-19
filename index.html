@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas Effect</title>
+    <title>Circle Simulator</title>
     <style>
         body, html {
             margin: 0;
@@ -13,26 +13,53 @@
         canvas {
             display: block;
         }
+        .controls {
+          height: 30px;
+        }
+        .controlbox {
+          display: inline-block;
+          padding-right: 10px;
+        }
+        #gravityZero {
+          cursor: pointer;
+          color: blue;
+          text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <label for="gravitySlider">Gravity:</label>
-    <input type="range" id="gravitySlider" min="-0.5" max="0.5" step="0.01" value="0.5">
-    <label for="ballSizeSlider">Ball Size:</label>
-    <input type="range" id="ballSizeSlider" min="1" max="50" value="15" step="1">
-    <label for="dampingSlider">Wall Energy:</label>
-    <input type="range" id="dampingSlider" min="0.5" max="1.0" value="0.90" step="0.01">
-    <label for="toolSelect">Tool:</label>
-    <select id="toolSelect">
-      <option value="addBall">Add Ball</option>
-      <option value="explodeBall">Explode</option>
-      <option value="implodeBall">Implode</option>
-    </select>
-    <label for="circleCounter">Circles:</label>
-    <span id="circleCounter">1</span>
-    <label for="temperatureDisplay">Temperature:</label>
-    <span id="temperatureDisplay">0</span>
-    <canvas id="effectCanvas"></canvas>
-    <script src="effect.js"></script>
+  <div class="controls">
+    <div class="controlbox">
+      <label for="gravitySlider">Gravity:</label>
+      <input type="range" id="gravitySlider" min="-0.5" max="0.5" step="0.01">
+      <span id="gravityZero">Set 0</span>
+    </div>
+    <div class="controlbox">
+      <label for="ballSizeSlider">Ball Size:</label>
+      <input type="range" id="ballSizeSlider" min="1" max="50" value="15" step="1">
+    </div>
+    <div class="controlbox">
+      <label for="dampingSlider">Wall Energy:</label>
+      <input type="range" id="dampingSlider" min="0.5" max="1.0" value="0.90" step="0.01">
+    </div>
+    <div class="controlbox">
+      <label for="toolSelect">Tool:</label>
+      <select id="toolSelect">
+        <option value="addBall">Add Ball</option>
+        <option value="explodeBall">Explode</option>
+        <option value="implodeBall">Implode</option>
+      </select>
+    </div>
+    <div class="controlbox">
+      <label for="circleCounter">Circles:</label>
+      <span id="circleCounter">1</span>
+    </div>
+    <div class="controlbox">
+      <label for="temperatureDisplay">Temperature:</label>
+      <span id="temperatureDisplay">0</span>
+    </div>
+  </div>
+  <canvas id="effectCanvas"></canvas>
+  <script src="effect.js"></script>
 </body>
 </html>
