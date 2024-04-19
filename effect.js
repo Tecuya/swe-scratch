@@ -1,4 +1,4 @@
- // Simple bouncing ball effect
+// Simple bouncing ball effect
 
 // Get the canvas and context
 const canvas = document.getElementById('effectCanvas');
@@ -6,7 +6,7 @@ const ctx = canvas.getContext('2d');
 
 // Set the canvas to full screen
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.height = window.innerHeight - 30;
 
 // Ball properties
 const ball = {
@@ -148,35 +148,35 @@ function update() {
   checkCollisions(); // Check for collisions between balls
   drawBalls();
 
-        balls.forEach(ball => {
-            // Bounce off the walls
-            // Damping factor for energy loss on wall collision
-            const damping = 0.97;
-            // Bounce off the walls with energy loss
-            if(ball.x + ball.size > canvas.width) {
-                ball.dx *= -1 * damping;
-                ball.x = canvas.width - ball.size; // Adjust position to prevent bleeding
-            }
-            if(ball.x - ball.size < 0) {
-                ball.dx *= -1 * damping;
-                ball.x = ball.size; // Adjust position to prevent bleeding
-            }
-            if(ball.y + ball.size > canvas.height) {
-                ball.dy *= -1 * damping;
-                ball.y = canvas.height - ball.size; // Adjust position to prevent bleeding
-            }
-            if(ball.y - ball.size < 0) {
-                ball.dy *= -1 * damping;
-                ball.y = ball.size; // Adjust position to prevent bleeding
-            }
+  balls.forEach(ball => {
+    // Bounce off the walls
+    // Damping factor for energy loss on wall collision
+    const damping = 0.97;
+    // Bounce off the walls with energy loss
+    if(ball.x + ball.size > canvas.width) {
+      ball.dx *= -1 * damping;
+      ball.x = canvas.width - ball.size; // Adjust position to prevent bleeding
+    }
+    if(ball.x - ball.size < 0) {
+      ball.dx *= -1 * damping;
+      ball.x = ball.size; // Adjust position to prevent bleeding
+    }
+    if(ball.y + ball.size > canvas.height) {
+      ball.dy *= -1 * damping;
+      ball.y = canvas.height - ball.size; // Adjust position to prevent bleeding
+    }
+    if(ball.y - ball.size < 0) {
+      ball.dy *= -1 * damping;
+      ball.y = ball.size; // Adjust position to prevent bleeding
+    }
 
-            // Apply gravity from the slider
-            ball.dy += gravity; // Use the gravity value from the slider
+    // Apply gravity from the slider
+    ball.dy += gravity; // Use the gravity value from the slider
 
-            // Move the ball
-            ball.x += ball.dx;
-            ball.y += ball.dy;
-        });
+    // Move the ball
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+  });
 
   requestAnimationFrame(update);
 }
