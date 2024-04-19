@@ -38,8 +38,6 @@ function createBall(x, y, size) {
     size,
     dx: 0,
     dy: 0,
-    // dx: (Math.random() - 0.5) * 10,
-    // dy: (Math.random() - 0.5) * 10
   };
 }
 
@@ -136,13 +134,13 @@ function update() {
     if(ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
       ball.dx *= -1 * damping;
     }
-        if(ball.y + ball.size > canvas.height) {
-            ball.dy *= -1 * damping;
-            ball.y = canvas.height - ball.size; // Keep the ball within the canvas bounds
-        }
-        if(ball.y - ball.size < 0) {
-            ball.dy *= -1 * damping;
-        }
+    if(ball.y + ball.size > canvas.height) {
+      ball.dy *= -1 * damping;
+      ball.y = canvas.height - ball.size; // Keep the ball within the canvas bounds
+    }
+    if(ball.y - ball.size < 0) {
+      ball.dy *= -1 * damping;
+    }
 
     // Apply gravity from the slider
     ball.dy += gravity; // Use the gravity value from the slider
