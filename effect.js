@@ -49,28 +49,20 @@ let mouseDown = false;
 let intervalId;
 
 canvas.addEventListener('mousedown', function(event) {
-  mouseDown = true;
+  const toolSelect = document.getElementById('toolSelect').value;
   const rect = canvas.getBoundingClientRect();
   const ballSizeSlider = document.getElementById('ballSizeSlider');
-  const create = (x, y) => {
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  
+  if (toolSelect === 'addBall') {
     const size = parseInt(ballSizeSlider.value);
     balls.push(createBall(x, y, size));
     document.getElementById('circleCounter').innerText = balls.length;
-  };
-  const onMouseMove = (e) => {
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    create(x, y);
-  };
-  canvas.addEventListener('mousemove', onMouseMove);
-  canvas.addEventListener('mouseup', function(event) {
-    mouseDown = false;
-    canvas.removeEventListener('mousemove', onMouseMove);
-  });
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  create(x, y);
-});
+    // TODO: Implement explosion logic here
+  } else if (toolSelect === 'explodeBall') {
+    explodeBalls(x, y);
+  }
 
 
 // Modify drawBall to draw all balls
@@ -213,4 +205,20 @@ function explodeRandomBall() {
 const dampingSlider = document.getElementById('dampingSlider')
 dampingSlider.addEventListener('input', () => {
   damping = parseFloat(dampingSlider.value);
-});
+// Function to explode balls around a point
+function explodeBalls(centerX, centerY) {
+  const explosionRadius = 100; // radius within which balls will be affected
+  const explosionForce = 10; // force of the explosion
+
+  balls.forEach(ball => {
+    const dx = ball.x - centerX;
+    const dy = ball.y - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < explosionRadius) {
+      const forceDirectionX = dx / distance;
+      const forceDirectionY = dy / distance;
+      ball.dx += explosionForce * forceDirectionX;
+      ball.dy += explosionForce * forceDirectionY;
+    }
+  });
+}
