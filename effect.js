@@ -54,6 +54,7 @@ canvas.addEventListener('mousedown', function(event) {
   const create = (x, y) => {
     const size = parseInt(ballSizeSlider.value);
     balls.push(createBall(x, y, size));
+    document.getElementById('circleCounter').innerText = balls.length;
   };
   const onMouseMove = (e) => {
     const x = e.clientX - rect.left;
