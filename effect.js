@@ -148,29 +148,35 @@ function update() {
   checkCollisions(); // Check for collisions between balls
   drawBalls();
 
-  balls.forEach(ball => {
-    // Bounce off the walls
-    // Damping factor for energy loss on wall collision
-    const damping = 0.97;
-    // Bounce off the walls with energy loss
-    if(ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
-      ball.dx *= -1 * damping;
-    }
-    if(ball.y + ball.size > canvas.height) {
-      ball.dy *= -1 * damping;
-      ball.y = canvas.height - ball.size; // Keep the ball within the canvas bounds
-    }
-    if(ball.y - ball.size < 0) {
-      ball.dy *= -1 * damping;
-    }
+        balls.forEach(ball => {
+            // Bounce off the walls
+            // Damping factor for energy loss on wall collision
+            const damping = 0.97;
+            // Bounce off the walls with energy loss
+            if(ball.x + ball.size > canvas.width) {
+                ball.dx *= -1 * damping;
+                ball.x = canvas.width - ball.size; // Adjust position to prevent bleeding
+            }
+            if(ball.x - ball.size < 0) {
+                ball.dx *= -1 * damping;
+                ball.x = ball.size; // Adjust position to prevent bleeding
+            }
+            if(ball.y + ball.size > canvas.height) {
+                ball.dy *= -1 * damping;
+                ball.y = canvas.height - ball.size; // Adjust position to prevent bleeding
+            }
+            if(ball.y - ball.size < 0) {
+                ball.dy *= -1 * damping;
+                ball.y = ball.size; // Adjust position to prevent bleeding
+            }
 
-    // Apply gravity from the slider
-    ball.dy += gravity; // Use the gravity value from the slider
+            // Apply gravity from the slider
+            ball.dy += gravity; // Use the gravity value from the slider
 
-    // Move the ball
-    ball.x += ball.dx;
-    ball.y += ball.dy;
-  });
+            // Move the ball
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+        });
 
   requestAnimationFrame(update);
 }
