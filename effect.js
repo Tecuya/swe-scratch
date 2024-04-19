@@ -69,6 +69,8 @@ canvas.addEventListener('mousedown', function(event) {
       document.getElementById('circleCounter').innerText = balls.length;
     } else if (toolSelect === 'explodeBall') {
       explodeBalls(x, y);
+    } else if (toolSelect === 'implodeBall') {
+      implodeBalls(x, y);
     }
   };
   const onMouseMove = (e) => {
@@ -165,8 +167,24 @@ function explodeBalls(centerX, centerY) {
       ball.dy += explosionForce * forceDirectionY;
     }
   });
-};
+}
 
+function implodeBalls(centerX, centerY) {
+  const implosionRadius = 100; // radius within which balls will be affected
+  const implosionForce = -10; // force of the implosion, negative to pull inward
+
+  balls.forEach(ball => {
+    const dx = ball.x - centerX;
+    const dy = ball.y - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < implosionRadius) {
+      const forceDirectionX = dx / distance;
+      const forceDirectionY = dy / distance;
+      ball.dx += implosionForce * forceDirectionX;
+      ball.dy += implosionForce * forceDirectionY;
+    }
+  });
+}
 
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
