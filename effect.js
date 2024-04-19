@@ -106,12 +106,17 @@ function checkCollisions() {
         const v2n = normal.x * balls[j].dx + normal.y * balls[j].dy;
         const v2t = tangent.x * balls[j].dx + tangent.y * balls[j].dy;
 
-        // Exchange normal velocity components (tangent components remain unchanged)
-        balls[i].dx = tangent.x * v1t + normal.x * v2n;
-        balls[i].dy = tangent.y * v1t + normal.y * v2n;
-        balls[j].dx = tangent.x * v2t + normal.x * v1n;
-        balls[j].dy = tangent.y * v2t + normal.y * v1n;
-      }
+        // Calculate new normal velocities using the mass (size)
+        const m1 = balls[i].size;
+        const m2 = balls[j].size;
+        const newV1n = (v1n * (m1 - m2) + 2 * m2 * v2n) / (m1 + m2);
+        const newV2n = (v2n * (m2 - m1) + 2 * m1 * v1n) / (m1 + m2);
+
+        // Convert the scalar normal and tangent velocities into vectors
+        balls[i].dx = tangent.x * v1t + normal.x * newV1n;
+        balls[i].dy = tangent.y * v1t + normal.y * newV1n;
+        balls[j].dx = tangent.x * v2t + normal.x * newV2n;
+        balls[j].dy = tangent.y * v2t + normal.y * newV2n;
     }
   }
 }
