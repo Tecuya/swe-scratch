@@ -98,7 +98,6 @@ function calculateKineticEnergy(ball) {
   const kineticEnergy = 0.5 * ball.size * velocity * velocity;
   return kineticEnergy;
 }
-}
 
 // Function to update the temperature display
 function updateTemperatureDisplay() {
