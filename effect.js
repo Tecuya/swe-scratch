@@ -88,6 +88,21 @@ gravitySlider.addEventListener('input', () => {
   gravity = parseFloat(gravitySlider.value);
 });
 
+// Function to calculate kinetic energy of a ball
+function calculateKineticEnergy(ball) {
+  const velocity = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+  const kineticEnergy = 0.5 * ball.size * velocity * velocity;
+  return kineticEnergy;
+}
+
+// Function to update the temperature display
+function updateTemperatureDisplay() {
+  const totalKineticEnergy = balls.reduce((total, ball) => total + calculateKineticEnergy(ball), 0)
+  const averageKineticEnergy = balls.length > 0 ? totalKineticEnergy / balls.length : 0;
+  document.getElementById('temperatureDisplay').innerText = averageKineticEnergy.toFixed(2);
+}
+
+
 function checkCollisions() {
   for (let i = 0; i < balls.length; i++) {
     for (let j = i + 1; j < balls.length; j++) {
@@ -123,6 +138,9 @@ function checkCollisions() {
 
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  updateTemperatureDisplay();
+  
   checkCollisions(); // Check for collisions between balls
   drawBalls();
 
