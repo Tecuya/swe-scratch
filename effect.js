@@ -117,6 +117,7 @@ function checkCollisions() {
         balls[i].dy = tangent.y * v1t + normal.y * newV1n;
         balls[j].dx = tangent.x * v2t + normal.x * newV2n;
         balls[j].dy = tangent.y * v2t + normal.y * newV2n;
+      }
     }
   }
 }
@@ -171,9 +172,9 @@ function explodeRandomBall() {
     const dx = ball.x - explodedBall.x;
     const dy = ball.y - explodedBall.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance < explodedBall.size * 3) { // Arbitrary range of effect
-      ball.dx += dx / distance * 10; // Arbitrary force of explosion
-      ball.dy += dy / distance * 10;
+    if (distance < explodedBall.size * 8) { // Arbitrary range of effect
+      ball.dx += dx / distance * 20; // Arbitrary force of explosion
+      ball.dy += dy / distance * 20;
     }
   });
 }
