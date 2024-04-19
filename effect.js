@@ -10,6 +10,17 @@ canvas.height = window.innerHeight - 30;
 
 // Damping factor for energy loss on collision
 let damping = 0.97;
+const dampingSlider = document.getElementById('dampingSlider');
+dampingSlider.addEventListener('input', () => {
+  damping = parseFloat(dampingSlider.value);
+});
+
+// New gravity slider logic
+let gravity = 0.5; // Default gravity value
+const gravitySlider = document.getElementById('gravitySlider');
+gravitySlider.addEventListener('input', () => {
+  gravity = parseFloat(gravitySlider.value);
+});
 
 // Ball properties
 const ball = {
@@ -20,6 +31,10 @@ const ball = {
   dy: 4
 };
 
+// Start the animation
+// Initialize an array to hold multiple balls
+const balls = [ball];  // Start with the initial ball
+
 // Draw ball on canvas
 function drawBall() {
   ctx.beginPath();
@@ -28,10 +43,6 @@ function drawBall() {
   ctx.fill();
   ctx.closePath();
 }
-
-// Start the animation
-// Initialize an array to hold multiple balls
-const balls = [ball];  // Start with the initial ball
 
 // Function to create a new ball at click position
 function createBall(x, y, size) {
@@ -45,25 +56,34 @@ function createBall(x, y, size) {
 }
 
 // Add event listeners to canvas for mouse down and up events
-let mouseDown = false;
 let intervalId;
 
 canvas.addEventListener('mousedown', function(event) {
   const toolSelect = document.getElementById('toolSelect').value;
   const rect = canvas.getBoundingClientRect();
   const ballSizeSlider = document.getElementById('ballSizeSlider');
+  const click = (x, y) => {
+    if (toolSelect === 'addBall') {
+      const size = parseInt(ballSizeSlider.value);
+      balls.push(createBall(x, y, size));
+      document.getElementById('circleCounter').innerText = balls.length;
+    } else if (toolSelect === 'explodeBall') {
+      explodeBalls(x, y);
+    }
+  };
+  const onMouseMove = (e) => {
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    click(x, y);
+  };
+  canvas.addEventListener('mousemove', onMouseMove);
+  canvas.addEventListener('mouseup', function(event) {
+    canvas.removeEventListener('mousemove', onMouseMove);
+  });
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
-  
-  if (toolSelect === 'addBall') {
-    const size = parseInt(ballSizeSlider.value);
-    balls.push(createBall(x, y, size));
-    document.getElementById('circleCounter').innerText = balls.length;
-    // TODO: Implement explosion logic here
-  } else if (toolSelect === 'explodeBall') {
-    explodeBalls(x, y);
-  }
-
+  click(x, y);
+});
 
 // Modify drawBall to draw all balls
 function drawBalls() {
@@ -76,12 +96,6 @@ function drawBalls() {
   });
 }
 
-// New gravity slider logic
-let gravity = 0.5; // Default gravity value
-const gravitySlider = document.getElementById('gravitySlider');
-gravitySlider.addEventListener('input', () => {
-  gravity = parseFloat(gravitySlider.value);
-});
 
 // Function to calculate kinetic energy of a ball
 function calculateKineticEnergy(ball) {
@@ -135,15 +149,34 @@ function checkCollisions() {
   }
 }
 
+// Function to explode balls around a point
+function explodeBalls(centerX, centerY) {
+  const explosionRadius = 100; // radius within which balls will be affected
+  const explosionForce = 10; // force of the explosion
+
+  balls.forEach(ball => {
+    const dx = ball.x - centerX;
+    const dy = ball.y - centerY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < explosionRadius) {
+      const forceDirectionX = dx / distance;
+      const forceDirectionY = dy / distance;
+      ball.dx += explosionForce * forceDirectionX;
+      ball.dy += explosionForce * forceDirectionY;
+    }
+  });
+};
+
+
 function update() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   updateTemperatureDisplay();
-  
+
   checkCollisions(); // Check for collisions between balls
   drawBalls();
 
-  balls.forEach(ball => {  
+  balls.forEach(ball => {
     // Bounce off the walls with energy loss
     if(ball.x + ball.size > canvas.width) {
       ball.dx *= -1 * damping;
@@ -175,50 +208,3 @@ function update() {
 
 // Start the animation
 update();
-document.addEventListener('DOMContentLoaded', (event) => {
-  const explodeButton = document.getElementById('explodeButton');
-  explodeButton.addEventListener('click', explodeRandomBall);
-
-
-});
-
-function explodeRandomBall() {
-  if (balls.length === 0) return; // No balls to explode
-  const index = Math.floor(Math.random() * balls.length);
-  const explodedBall = balls[index];
-  balls.splice(index, 1); // Remove the exploded ball
-
-  // Calculate the explosion effect on nearby balls
-  balls.forEach(ball => {
-    const dx = ball.x - explodedBall.x;
-    const dy = ball.y - explodedBall.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance < explodedBall.size * 8) { // Arbitrary range of effect
-      ball.dx += dx / distance * 20; // Arbitrary force of explosion
-      ball.dy += dy / distance * 20;
-    }
-  });
-}
-
-
-// Update the damping variable when the slider value changes
-const dampingSlider = document.getElementById('dampingSlider')
-dampingSlider.addEventListener('input', () => {
-  damping = parseFloat(dampingSlider.value);
-// Function to explode balls around a point
-function explodeBalls(centerX, centerY) {
-  const explosionRadius = 100; // radius within which balls will be affected
-  const explosionForce = 10; // force of the explosion
-
-  balls.forEach(ball => {
-    const dx = ball.x - centerX;
-    const dy = ball.y - centerY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance < explosionRadius) {
-      const forceDirectionX = dx / distance;
-      const forceDirectionY = dy / distance;
-      ball.dx += explosionForce * forceDirectionX;
-      ball.dy += explosionForce * forceDirectionY;
-    }
-  });
-}
